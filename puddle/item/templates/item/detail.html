@@ -1,0 +1,48 @@
+{% extends "core/base.html" %}
+
+{% block title %}Detail page{% endblock title %}
+
+{% block content %}
+<div class="grid grid-cols-5 gap-6">
+    <div class="col-span-3">
+        <img src="{{ item.image.url }}" class="rounded-xl">
+    </div>
+    <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
+        <h1 class="mb-5 text-3xl font-bold">{{ item.name }}<h1>
+            
+        <h3 class="text-lg font-semibold text-gray-500"><strong>Price: {{ item.price }}</strong></h3>
+        <p class="text-lg font-bold text-gray-500"><strong>Seller: {{ item.created_by }}</strong></p>
+        <p class="text-lg font-bold mb-6"><strong class="text-gray-500">Description:</strong><br>
+            {{ item.description }}
+        </p>
+        {% if request.user == item.created_by %}
+            <div class="mt-6 p-6 bg-white rounded-xl">
+                <a href="{% url 'item:update' item.pk %}" class="inline-block px-6 py-3 text-lg font-semibold text-white bg-teal-500 hover:bg-teal-700 rounded-xl">Edit</a>
+                <a href="{% url 'item:delete' item.pk %}" class="inline-block px-6 py-3 text-lg font-semibold text-white bg-red-500 hover:bg-red-700 rounded-xl">Delete</a>
+            </div>
+        {% else %}
+            <a href="{% url 'conversation:new' item.id %}" class="inline-block mt-3 px-6 py-3 text-lg font-bold text-white bg-teal-500 hover:bg-teal-700 rounded-xl">Contact Seller</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="span-cols-3 bg-gray-100 rounded-xl">
+    <h1 class="py-12 mt-4 text-2xl font-bold text-center">Related Items</h1>
+    <div class="grid grid-cols-3 gap-3">
+        {% for item in related_items %}
+            <div class="mb-8 px-6 py-3">
+                <a href="{% url 'item:detail' item.id %}">
+                    <div>
+                        <img src="{{ item.image.url }}" class="rounded-xl">
+                    </div>
+
+                    <div class="p-6 bg-white rounded-xl">
+                        <h2 class="text-xl font-bold">{{ item.name }}</h3> 
+                        <p class="font-bold text-gray-500">Price: ${{ item.price }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
